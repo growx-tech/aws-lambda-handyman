@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "target": "es2016",
+    "module": "commonjs",
+    "rootDir": "./",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "declaration": true,
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "outDir": "./lib",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "test",
+    "jest.config.ts"
+  ]
+}

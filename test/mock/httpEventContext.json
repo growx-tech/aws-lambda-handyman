@@ -1,0 +1,58 @@
+{
+  "event": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      "Host": "localhost:3000"
+    },
+    "body": "{\n    \"email\": \"sla@vi.co.to\",\n    \"hexColor\": \"#abcdef\",\n    \"integerNumber\": 1\n}",
+    "pathParameters": {
+      "intParam": "12345678"
+    },
+    "queryStringParameters": {
+      "version": "1.0.1",
+      "pumpOne": "false",
+      "robotSpeed": "55"
+    }
+  },
+  "context": {
+    "awsRequestId": "34d3ec9c-5c7a-4aba-ad75-d6a0008206a5",
+    "callbackWaitsForEmptyEventLoop": true,
+    "clientContext": null,
+    "functionName": "handyman-sls-testx-dev-DecoratedHandler",
+    "functionVersion": "$LATEST",
+    "invokedFunctionArn": "offline_invokedFunctionArn_for_handyman-sls-testx-dev-DecoratedHandler",
+    "logGroupName": "offline_logGroupName_for_handyman-sls-testx-dev-DecoratedHandler",
+    "logStreamName": "offline_logStreamName_for_handyman-sls-testx-dev-DecoratedHandler",
+    "memoryLimitInMB": "1024"
+  },
+  "eventWithNoPathParams": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      "Host": "localhost:3000"
+    }
+  },
+  "eventWithBrokenBody": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      "Host": "localhost:3000"
+    },
+    "body": "{,123}"
+  },
+  "eventWithNoBody": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      "Host": "localhost:3000"
+    }
+  },
+  "eventWithNoQueries": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      "Host": "localhost:3000"
+    }
+  }
+}
