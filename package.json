@@ -1,12 +1,13 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.0.3",
+  "version": "0.0.7",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prettier": "npx prettier --write ."
+    "prettier": "npx prettier --write .",
+    "dev:link": "npm link"
   },
   "author": "Slaven Ivanov <ivanov@growy.nl>",
   "license": "ISC",

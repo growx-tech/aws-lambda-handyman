@@ -1,10 +1,13 @@
-# AWS Lambda Utility Package
-
-AWS Lambda validations made easy 🏄‍♀ ️and some other things
+<p align="center">
+  <h1 align="center">AWS Lambda Handyman</h1>
+  <p align="center">
+AWS Lambda validation made easy 🏄‍♀ ...️and some other things
+  </p>
+</p>
 
 ```typescript
 class BodyType {
-  @IsEmail
+  @IsEmail()
   email: string
 }
 
@@ -239,6 +242,7 @@ class IsBalloonInflated {
 
 # TODO
 
+- [ ] add 'reflect-metadata' in installation
 - [ ] Linting
 - [ ] Prettier
 - [ ] Documentation
@@ -247,3 +251,5 @@ class IsBalloonInflated {
 - [ ] non promise response functions
 - [ ] add Growy logo
 - [ ] setup branch protection
+- [ ] add keywords to package.json
+- [ ] possibly setup husky to enforce version ++
