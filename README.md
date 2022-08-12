@@ -1,19 +1,22 @@
 # AWS Lambda Utility Package
 
-AWS Lambda validations made easy 🏄‍♀️
+AWS Lambda validations made easy 🏄‍♀ ️and some other things
 
 ```typescript
-class SpamBot {
-  @Handler()
-  static async handle(@Body() { email }: BodyType) {
-    sendSpam(email) // -> Hi👋    ️👆 I'm validated
-  }
-}
-
 class BodyType {
   @IsEmail
   email: string
 }
+
+class SpamBot {
+  @Handler()
+  static async handle(@Body() { email }: BodyType) {
+    await sendSpam(email) // ->   ️👆 I'm validated
+    return ok()
+  }
+}
+
+export const handler = SpamBot.handle
 ```
 
 ## Table of Contents
@@ -31,7 +34,7 @@ class BodyType {
 First off we need to install the package
 
 ```shell
-TODO!!! 🤯
+npm i aws-lambda-handyman
 ```
 
 Since we use ```class-validator``` under the hood we need to install it for its validation decorators
@@ -242,3 +245,5 @@ class IsBalloonInflated {
 - [ ] possibly cull undefined properties in validated objects
 - [ ] rollup build to minify package
 - [ ] non promise response functions
+- [ ] add Growy logo
+- [ ] setup branch protection

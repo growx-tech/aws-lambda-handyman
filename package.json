@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -8,8 +8,12 @@
     "test": "jest",
     "prettier": "npx prettier --write ."
   },
-  "author": "",
+  "author": "Slaven Ivanov <ivanov@growy.nl>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/growx-tech/aws-lambda-handyman.git"
+  },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.101",
     "@types/jest": "^28.1.6",
