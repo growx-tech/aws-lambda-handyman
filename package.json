@@ -1,9 +1,12 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "AWS Lambda validation made easy \uD83C\uDFC4",
   "main": "./lib/src/index.js",
   "typings": "./lib/src/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "author": "Slaven Ivanov <ivanov@growy.nl>",
   "license": "ISC",
   "repository": {
