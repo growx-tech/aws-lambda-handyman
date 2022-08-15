@@ -1,19 +1,25 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.0.7",
-  "description": "",
-  "main": "lib/index.js",
+  "version": "0.1.0",
+  "description": "AWS Lambda validation made easy \uD83C\uDFC4",
+  "main": "./lib/src/index.js",
+  "typings": "./lib/src/index.d.ts",
+  "author": "Slaven Ivanov <ivanov@growy.nl>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/growx-tech/aws-lambda-handyman.git"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
     "prettier": "npx prettier --write .",
     "dev:link": "npm link"
   },
-  "author": "Slaven Ivanov <ivanov@growy.nl>",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/growx-tech/aws-lambda-handyman.git"
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.101",
@@ -25,9 +31,16 @@
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
-  "dependencies": {
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
-    "reflect-metadata": "^0.1.13"
-  }
+  "keywords": [
+    "aws",
+    "lambda",
+    "aws lambda",
+    "typescript",
+    "validate",
+    "validation",
+    "schema",
+    "aws lambda utility",
+    "http responses",
+    "error handling"
+  ]
 }

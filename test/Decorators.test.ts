@@ -6,11 +6,11 @@ import {
   Event,
   Handler,
   handlerNotAsyncMessage,
+  HttpError,
   Paths,
   Queries
-} from '../src/Decorators'
+} from '../src'
 import * as mockData from '../test/mock/httpEventContext.json'
-import { HttpError } from '../src/HttpErrors'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
 import { IsBoolean, IsEmail, IsFQDN, IsHexColor, IsInt, IsSemVer, IsUUID } from 'class-validator'
 

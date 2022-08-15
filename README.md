@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">AWS Lambda Handyman</h1>
   <p align="center">
-AWS Lambda validation made easy 🏄‍♀ ...️and some other things
+AWS Lambda validation made easy 🏄 ...️and some other things
   </p>
 </p>
 

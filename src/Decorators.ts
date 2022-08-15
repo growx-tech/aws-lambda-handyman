@@ -2,8 +2,8 @@ import 'reflect-metadata'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
 import { validateSync } from 'class-validator'
 import { ClassConstructor, plainToInstance } from 'class-transformer'
-import { HttpError } from './HttpErrors'
-import { badRequest, internalServerError, response } from './HttpResponses'
+import { HttpError } from '.'
+import { badRequest, internalServerError, response } from '.'
 
 const eventMetadataKey = Symbol('Event')
 const contextMetadataKey = Symbol('Ctx')

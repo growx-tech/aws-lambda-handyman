@@ -1,13 +1,4 @@
-import {
-  badRequest,
-  created,
-  imaTeapot,
-  internalServerError,
-  notFound,
-  ok,
-  response,
-  unauthorized
-} from '../src/HttpResponses'
+import { badRequest, created, imaTeapot, internalServerError, notFound, ok, response, unauthorized } from '../src'
 
 const customBody = { message: `Hi, look at me! I'm a test message 🙌` }
 
