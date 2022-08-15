@@ -22,7 +22,7 @@ class SpamBot {
 export const handler = SpamBot.handle
 ```
 
-[![Test, Build and Deploy](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml)
+[![Test, Build and Publish](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml)
 
 ## Table of Contents
 
