@@ -5,7 +5,12 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['./test'],
-  collectCoverage: true
+  collectCoverage: true,
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.test.json'
+    }
+  }
 }
 
 export default config

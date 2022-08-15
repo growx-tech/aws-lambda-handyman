@@ -19,11 +19,9 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
-    "test",
-    "jest.config.ts"
+    "lib",
+    "node_modules",
+    "test/**"
   ]
 }
