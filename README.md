@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">AWS Lambda Handyman</h1>
   <p align="center">
-AWS Lambda validation made easy 🏄 ...️and some other things
+AWS Lambda TypeScript validation made easy 🏄 ...️and some other things
   </p>
 </p>
 
@@ -30,7 +30,13 @@ export const handler = SpamBot.handle
 - [Basic Usage](#basic-usage)
 - [Decorators](#decorators)
     - [Method Decorators](#method-decorators)
+        - [@Handler()](#handler)
     - [Function Param Decorators](#function-param-decorators)
+        - [@Event()](#event)
+        - [@Ctx()](#ctx)
+        - [@Paths()](#paths)
+        - [@Body()](#body)
+        - [@Queries()](#queries)
 - [Http Errors](#httperrors)
 - [Http Responses](#httpresponses)
 
@@ -96,10 +102,10 @@ export const handler = AccountDelete.handle
 ```typescript
 class KitchenSink {
   @Handler()
-  static async handle(@Event() evt: APIGatewayProxyEventBase<T>,
-                      @Ctx() ctx: Context,
-                      @Body() body: BodyType,
+  static async handle(@Body() body: BodyType,
+                      @Event() evt: APIGatewayProxyEventBase<T>,
                       @Paths() paths: PathsType,
+                      @Ctx() ctx: Context,
                       @Queries() queries: QueriesType) {
     return ok({ body, paths, queries, evt, ctx })
   }
@@ -134,6 +140,92 @@ When applied, `@Handler()` enables the following:
 3. Out of the box error handling and custom error handling via throwing [HttpError](#httperror-)
 
 ## Validation and Injection
+
+Behind the scenes **AWS Lambda Handyman** uses `class-validator` for validation, so if any validation goes wrong we
+simply return a 400 with the `constraints` of
+the `ValidationError[]`[click](https://github.com/typestack/class-validator#validation-errors) :
+
+```typescript
+class BodyType {
+  @IsEmail()
+  email: string
+}
+
+class SpamBot {
+  @Handler()
+  static async handle(@Body() { email }: BodyType) {
+  }
+}
+```
+
+So if the preceding handler gets called with anything other than a body, containing:
+
+```json
+{
+  "email": "*some email*"
+}
+```
+
+The following response is sent:
+
+```json
+HTTP/1.1 400 Bad Request
+content-type: application/json; charset=utf-8
+
+[{"isEmail": "email must be an email"}]
+```
+
+If there received request is correct, the decorated property is injected into the method parameter, is ready for use.
+
+## Error handling
+
+Methods, decorated with `@Handler` have automatic error handling. I.e. if an error gets thrown inside of the method it
+gets wrapped with a http response by default
+
+```typescript
+class SpamBot {
+  @Handler()
+  static async handle() {
+    throw new Error("I've fallen... and I can't get up 🐸")
+  }
+}
+```
+
+Returns:
+
+```json
+HTTP/1.1 500 Internal Server Error
+content-type: application/json; charset=utf-8
+
+{
+"message": "I've fallen... and I can't get up 🐸"
+}
+```
+
+We could further instrument this by throwing an [HttpError()](#httperror-) , allowing us to specify the response's
+message and response code:
+
+```typescript
+class SpamBot {
+  @Handler()
+  static async handle() {
+    throw new HttpError('Oopsie Doopsie 🐸', 501)
+  }
+}
+```
+
+Which returns:
+
+```json
+HTTP/1.1 501 Not Implemented
+content-type: application/json; charset=utf-8
+
+{
+"message": "Oopsie Doopsie 🐸"
+}
+```
+
+You could also extend `HttpError` for commonly occuring error types like in [DynamoError()](#dynamoerror)
 
 ### Function Param Decorators
 
@@ -228,8 +320,6 @@ class IsBalloonInflated {
 
 ```ok(body?: object)```
 
-```ok(body?: object)```
-
 ```created(body?: object)```
 
 ```badRequest(body?: object)```
@@ -244,10 +334,12 @@ class IsBalloonInflated {
 
 # TODO
 
+- [ ] Documentation
+    - [ ] http responses
+    - [ ] http errors
 - [ ] add 'reflect-metadata' in installation
 - [ ] Linting
 - [ ] Prettier
-- [ ] Documentation
 - [ ] possibly cull undefined properties in validated objects
 - [ ] non promise response functions
 - [ ] add Growy logo
