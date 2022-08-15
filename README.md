@@ -22,6 +22,8 @@ class SpamBot {
 export const handler = SpamBot.handle
 ```
 
+[![Test, Build and Deploy](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml)
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -247,9 +249,7 @@ class IsBalloonInflated {
 - [ ] Prettier
 - [ ] Documentation
 - [ ] possibly cull undefined properties in validated objects
-- [ ] rollup build to minify package
 - [ ] non promise response functions
 - [ ] add Growy logo
 - [ ] setup branch protection
-- [ ] add keywords to package.json
-- [ ] possibly setup husky to enforce version ++
+- [ ] add coverage badge
