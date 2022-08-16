@@ -24,6 +24,10 @@ export const handler = SpamBot.handle
 
 [![Test, Build and Publish](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml)
 
+<p align="center">
+    <a href='https://www.growy.nl/'><img src='./static/growy-logo.png'></a>
+</p>
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -342,6 +346,5 @@ class IsBalloonInflated {
 - [ ] Prettier
 - [ ] possibly cull undefined properties in validated objects
 - [ ] non promise response functions
-- [ ] add Growy logo
 - [ ] setup branch protection
 - [ ] add coverage badge
