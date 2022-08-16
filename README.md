@@ -25,7 +25,9 @@ export const handler = SpamBot.handle
 [![Test, Build and Publish](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml)
 
 <p align="center">
-    <a href='https://www.growy.nl/'><img src='./static/growy-logo.png'></a>
+    <a target="_blank" rel="noopener noreferrer" href='https://www.growy.nl/'>
+        <img src="./static/growy-logo.png" alt="Growy Logo">
+    </a>
 </p>
 
 ## Table of Contents
