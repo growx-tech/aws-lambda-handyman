@@ -343,7 +343,6 @@ class IsBalloonInflated {
 - [ ] Documentation
     - [ ] http responses
     - [ ] http errors
-    - [ ] explain that lib is tree-shakeable
 - [ ] add 'reflect-metadata' in installation
 - [ ] Linting
 - [ ] Prettier
@@ -351,3 +350,4 @@ class IsBalloonInflated {
 - [ ] non promise response functions
 - [ ] setup branch protection
 - [ ] add coverage badge
+- [ ] make esm build for tree-shake, make cjs build for interop
