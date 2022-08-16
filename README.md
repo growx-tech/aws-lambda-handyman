@@ -343,6 +343,7 @@ class IsBalloonInflated {
 - [ ] Documentation
     - [ ] http responses
     - [ ] http errors
+    - [ ] explain that lib is tree-shakeable
 - [ ] add 'reflect-metadata' in installation
 - [ ] Linting
 - [ ] Prettier
