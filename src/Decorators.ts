@@ -13,7 +13,7 @@ const queriesMetadataKey = Symbol('Queries')
 
 export const defaultInternalServerErrorMessage = 'Oops, something went wrong 😬'
 export const bodyIsNotProperJSON = 'Provided body is not proper JSON 😬'
-export const handlerNotAsyncMessage = '⚠️ The methods that you attach the @Handler decorator to need be async / need to return a Promise ⚠️ '
+export const handlerNotAsyncMessage = '⚠️ The methods that you attach the @Handler decorator need to be async / need to return a Promise ⚠️ '
 
 export function Event() {
   return function(target: Object, propertyKey: string | symbol, parameterIndex: number) {
