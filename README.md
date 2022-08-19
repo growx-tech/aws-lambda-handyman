@@ -38,6 +38,8 @@ export const handler = SpamBot.handle
     - [Method Decorators](#method-decorators)
         - [@Handler()](#handler)
             - [@Handler(options)](#handleroptions-transformvalidateoptions)
+            - [Validation and Injection](#validation-and-injection)
+            - [Validation Caveats](#validation-caveats)
     - [Function Param Decorators](#function-param-decorators)
         - [@Event()](#event)
         - [@Ctx()](#ctx)
@@ -57,10 +59,10 @@ First off we need to install the package
 npm i aws-lambda-handyman
 ```
 
-Since we use ```class-validator``` under the hood we need to install it for its validation decorators
+Since we use `class-validator` and `class-transformer` under the hood we need to install them for their decorators
 
 ```shell
-npm i class-validator
+npm i class-transformer class-validator
 ```
 
 Next we need to enable these options in our ```.tsconfig``` file
