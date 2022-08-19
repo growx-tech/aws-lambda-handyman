@@ -8,15 +8,52 @@ import {
   handlerNotAsyncMessage,
   HttpError,
   Paths,
-  Queries
+  Queries,
+  TransformBoolean,
+  TransformValidateOptions
 } from '../src'
 import * as mockData from '../test/mock/httpEventContext.json'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
 import { IsBoolean, IsEmail, IsFQDN, IsHexColor, IsInt, IsSemVer, IsUUID } from 'class-validator'
+import * as ct from 'class-transformer'
+import { Type } from 'class-transformer'
 
 const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithNoBody, eventWithNoQueries } = mockData
 const customMessage = 'Custom message 123 xd teapot bois'
 const customCode = 418
+
+test('Handler options', async () => {
+  const options: TransformValidateOptions = { enableImplicitConversion: true }
+
+  const spy = jest.spyOn(ct, 'plainToInstance')
+
+  class BodyType {
+    email: string
+  }
+
+  class PathType {
+    intParam: number
+  }
+
+  class QueriesType {
+    fqdn: boolean
+  }
+
+  class HandlerTest {
+    @Handler(options)
+    static async handle(@Body() body: BodyType,
+                        @Paths() paths: PathType,
+                        @Queries() queries: QueriesType) {
+    }
+  }
+
+  //@ts-ignore
+  await HandlerTest.handle(event, context)
+
+  expect(spy).toHaveBeenCalledWith(BodyType, JSON.parse(event.body), options)
+  expect(spy).toHaveBeenCalledWith(PathType, event.pathParameters, options)
+  expect(spy).toHaveBeenCalledWith(QueriesType, event.queryStringParameters, options)
+})
 
 test('Handler method is not async', () => {
   class HandlerToTest {
@@ -141,6 +178,7 @@ test('Handler has Ctx param', async () => {
 
 test('Handler has Paths param, and is called with expected payload', async () => {
   class PathType {
+    @Type(() => Number)
     @IsInt()
     intParam: number
   }
@@ -164,6 +202,7 @@ test('Handler has Paths param, and is called with expected payload', async () =>
 test('Handler has Paths param, and is called with unexpected payload', async () => {
   class PathType {
     @IsInt()
+    @Type(() => Number)
     intParam: number
     @IsEmail()
     emailParam: string
@@ -252,6 +291,7 @@ test('Handler has Queries param, and is called with expected payload', async () 
   class QueriesType {
     @IsSemVer()
     version: string
+    @TransformBoolean()
     @IsBoolean()
     pumpOne: boolean
   }

@@ -349,5 +349,6 @@ class IsBalloonInflated {
 - [ ] possibly cull undefined properties in validated objects
 - [ ] non promise response functions
 - [ ] setup branch protection
+  - [ ] add team to collaborators
 - [ ] add coverage badge
 - [ ] make esm build for tree-shake, make cjs build for interop

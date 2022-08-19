@@ -1,3 +1,5 @@
 export * from './Decorators'
 export * from './HttpErrors'
 export * from './HttpResponses'
+export * from './TransformDecorators'
+export * from './types'

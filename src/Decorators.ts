@@ -1,9 +1,8 @@
 import 'reflect-metadata'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
-import { validateSync } from 'class-validator'
+import { validateSync, ValidationError } from 'class-validator'
 import { ClassConstructor, plainToInstance } from 'class-transformer'
-import { HttpError } from '.'
-import { badRequest, internalServerError, response } from '.'
+import { badRequest, HttpError, internalServerError, response, TransformValidateOptions } from '.'
 
 const eventMetadataKey = Symbol('Event')
 const contextMetadataKey = Symbol('Ctx')
@@ -13,7 +12,7 @@ const queriesMetadataKey = Symbol('Queries')
 
 export const defaultInternalServerErrorMessage = 'Oops, something went wrong 😬'
 export const bodyIsNotProperJSON = 'Provided body is not proper JSON 😬'
-export const handlerNotAsyncMessage = '⚠️ The methods that you attach the @Handler decorator need to be async / need to return a Promise ⚠️ '
+export const handlerNotAsyncMessage = '⚠️ The methods that you decorate with @Handler, need to be async / need to return a Promise ⚠️ '
 
 export function Event() {
   return function(target: Object, propertyKey: string | symbol, parameterIndex: number) {
@@ -45,7 +44,7 @@ export function Queries() {
   }
 }
 
-export function Handler() {
+export function Handler(options?: TransformValidateOptions) {
   return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     let method = descriptor.value
 
@@ -70,11 +69,7 @@ export function Handler() {
 
         const pathsParamIndex: number | undefined = Reflect.getOwnMetadata(pathsMetadataKey, target, propertyKey)
         if (pathsParamIndex !== undefined) {
-          const pathsInstance = plainToInstance(paramTypes[pathsParamIndex], event.pathParameters ?? {}, { enableImplicitConversion: true })
-          const validationErrors = validateSync(pathsInstance)
-          if (validationErrors.length) {
-            return badRequest(validationErrors.map(err => err.constraints))
-          }
+          const pathsInstance = transformValidateOrReject(paramTypes[pathsParamIndex], event.pathParameters ?? {}, options)
 
           newArguments[pathsParamIndex] = pathsInstance
         }
@@ -89,11 +84,7 @@ export function Handler() {
             return badRequest({ message: bodyIsNotProperJSON })
           }
 
-          const bodyInstance = plainToInstance(paramTypes[bodyParamIndex], body)
-          const validationErrors = validateSync(bodyInstance)
-          if (validationErrors.length) {
-            return badRequest(validationErrors.map(err => err.constraints))
-          }
+          const bodyInstance = transformValidateOrReject(paramTypes[bodyParamIndex], body, options)
 
           newArguments[bodyParamIndex] = bodyInstance
         }
@@ -101,14 +92,7 @@ export function Handler() {
         // TODO: handle multiValueQueryStringParameters
         const queriesParamIndex: number | undefined = Reflect.getOwnMetadata(queriesMetadataKey, target, propertyKey)
         if (queriesParamIndex !== undefined) {
-          const queriesInstance = plainToInstance(paramTypes[queriesParamIndex], event.queryStringParameters ?? {}, {
-            enableImplicitConversion: true
-          })
-
-          const validationErrors = validateSync(queriesInstance)
-          if (validationErrors.length) {
-            return badRequest(validationErrors.map(err => err.constraints))
-          }
+          const queriesInstance = transformValidateOrReject(paramTypes[queriesParamIndex], event.queryStringParameters ?? {}, options)
 
           newArguments[queriesParamIndex] = queriesInstance
         }
@@ -123,10 +107,23 @@ export function Handler() {
           return internalServerError({ message })
         })
       } catch (e) {
+        if (e instanceof Array && e?.[0] instanceof ValidationError)
+          return badRequest(e.map(err => err.constraints))
+
         console.error('Oops 😬', e)
         if (e instanceof TypeError && e.message === `Cannot read properties of undefined (reading 'catch')`)
           throw new Error(handlerNotAsyncMessage)
       }
     }
   }
+}
+
+function transformValidateOrReject<T extends object, V extends object>(cls: ClassConstructor<T>, plain: V, options?: TransformValidateOptions): T {
+  const instance = plainToInstance(cls, plain, options)
+  const validationErrors = validateSync(instance, options)
+
+  if (validationErrors.length)
+    throw validationErrors
+
+  return instance
 }
