@@ -37,12 +37,15 @@ export const handler = SpamBot.handle
 - [Decorators](#decorators)
     - [Method Decorators](#method-decorators)
         - [@Handler()](#handler)
+            - [@Handler(options)](#handleroptions-transformvalidateoptions)
     - [Function Param Decorators](#function-param-decorators)
         - [@Event()](#event)
         - [@Ctx()](#ctx)
         - [@Paths()](#paths)
         - [@Body()](#body)
         - [@Queries()](#queries)
+    - [Transformer Decorators](#transformer-decorators)
+        - [@TransformBoolean()](#transformboolean)
 - [Http Errors](#httperrors)
 - [Http Responses](#httpresponses)
 
@@ -100,8 +103,7 @@ export const handler = AccountDelete.handle
    and ```static async handle(){}```
 4. We decorate ```handle()``` with the ```@Handler()``` decorator
 5. We decorate the method's parameter with ```@Body()``` and cast it to the expected shape i.e. ```CustomBodyType```
-6. ???
-7. We can readily use the automatically validated method parameter, in this case the 🅱️ody
+7. We can readily use the automatically validated method parameter, in this case the `@Body() { email }: CustomBodyType`
 
 #### Decorators can be mixed and matched:
 
@@ -117,8 +119,6 @@ class KitchenSink {
   }
 }
 ```
-
-[//]: #  (TODO show what happens when the request doesn't comply)
 
 ## Decorators
 
@@ -145,11 +145,24 @@ When applied, `@Handler()` enables the following:
 2. Injection of method parameters, decorated with [@Event()](#event) and [Ctx()](#ctx)
 3. Out of the box error handling and custom error handling via throwing [HttpError](#httperror-)
 
+### `@Handler(options?: TransformValidateOptions)`
+
+Since the `aws-lambda-handyman` uses [class-transformer](https://github.com/typestack/class-transformer)
+and [class-validator](https://github.com/typestack/class-validator), you can pass options to the `@Handler` that would
+be applied to the transformation and validation of the [decorated](#decorators) method property.
+
+```typescript
+import { ValidatorOptions } from 'class-validator/types/validation/ValidatorOptions'
+import { ClassTransformOptions } from 'class-transformer/types/interfaces'
+
+export type TransformValidateOptions = ValidatorOptions & ClassTransformOptions
+```
+
 ## Validation and Injection
 
 Behind the scenes **AWS Lambda Handyman** uses `class-validator` for validation, so if any validation goes wrong we
 simply return a 400 with the `constraints` of
-the `ValidationError[]`[click](https://github.com/typestack/class-validator#validation-errors) :
+the [ValidationError[]](https://github.com/typestack/class-validator#validation-errors) :
 
 ```typescript
 class BodyType {
@@ -183,9 +196,114 @@ content-type: application/json; charset=utf-8
 
 If there received request is correct, the decorated property is injected into the method parameter, is ready for use.
 
+## Validation Caveats
+
+By default, **Path** and **Query** parameters come in as strings, so if you try to do something like:
+
+```typescript
+class PathType {
+  @IsInt()
+  intParam: number
+}
+
+class HandlerTest {
+  @Handler()
+  static async handle(@Paths() paths: PathType) {
+  }
+}
+```
+
+It would return an error. See [Error Handling](#error-handling)
+
+Because `aws-lambda-handyman` uses [class-transformer](https://github.com/typestack/class-transformer), this issue can
+be solved in several ways:
+
+1. Decorate the type with a  [class-transformer](https://github.com/typestack/class-transformer) decorator
+
+```typescript
+  class PathType {
+  @Type(() => Number) // 👈 Decorator from `class-transformer`
+  @IsInt()
+  intParam: number
+}
+```
+
+2. Enable `enableImplicitConversion` in `@Handler(options)`
+
+```typescript
+class HandlerTest {    // 👇 
+  @Handler({ enableImplicitConversion: true })
+  static async handle(@Paths() paths: PathType) {
+  }
+}
+```
+
+Both approaches work in 99% of the time, but sometimes they don't. For example when calling:
+
+`/path?myBool=true`
+
+`/path?myBool=false`
+
+`/path?myBool=123`
+
+`/path?myBool=1`
+
+`/path?myBool=0`
+
+with
+
+```typescript
+class QueryTypes {
+  @IsBoolean()
+  myBool: boolean
+}
+
+class HandlerTest {
+  @Handler({ enableImplicitConversion: true })
+  static async handle(@Queries() { myBool }: QueryTypes) {
+    //            myBool is 'true'   👆 
+  }
+}
+```
+
+`myBool` would have the value of `true`. Why this happens is explained
+here : [Class Transformer Issue 626](https://github.com/typestack/class-transformer/issues/626) because of the
+implementation
+of [MDN Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+We can fix this in the way described
+in  [Class Transformer Issue 626,](https://github.com/typestack/class-transformer/issues/626) or we could
+use [@TransformBoolean](#transformboolean) like so:
+
+```typescript
+class QueryTypes {
+  @TransformBoolean() // 👈 use this 🎃
+  @IsBoolean()
+  myBool: boolean 
+}
+
+class HandlerTest {
+  @Handler()
+  static async handle(@Queries() { myBool }: QueryTypes) {
+  }
+}
+```
+
+So when we call the handler with the previous example we get this:
+
+`/path?myBool=true` 👉 myBool = 'true'
+
+`/path?myBool=false` 👉 myBool = 'false'
+
+`/path?myBool=123` 👉 [Validation error](#validation-and-injection)
+
+`/path?myBool=1` 👉 [Validation error](#validation-and-injection)
+
+`/path?myBool=0` 👉 [Validation error](#validation-and-injection)
+
 ## Error handling
 
-Methods, decorated with `@Handler` have automatic error handling. I.e. if an error gets thrown inside of the method it
+Methods, decorated with `@Handler` have automatic error handling. I.e. if an error gets thrown inside the method it
 gets wrapped with a http response by default
 
 ```typescript
@@ -313,6 +431,10 @@ class IsBalloonInflated {
   }
 }
 ```
+
+## Transformer Decorators
+
+### `@TransformBoolean()`
 
 ## HttpErrors
 
