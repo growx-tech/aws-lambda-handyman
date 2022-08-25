@@ -1,13 +1,13 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.1.12",
+  "version": "0.2.0-alpha",
   "description": "AWS Lambda TypeScript validation made easy 🏄",
-  "main": "./lib/src/index.js",
-  "typings": "./lib/src/index.d.ts",
+  "main": "./lib/cjs/src/index.js",
+  "typings": "./lib/cjs/src/index.d.ts",
+  "es2015": "./lib/esm2015/src/index.js",
   "files": [
     "lib"
   ],
-  "sideEffects": false,
   "author": "Slaven Ivanov <ivanov@growy.nl>",
   "license": "ISC",
   "repository": {
@@ -16,9 +16,12 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:es2015": "tsc --project tsconfig.es2015.json",
     "test": "jest",
     "dev:link": "npm link"
   },
+  "sideEffects": false,
   "dependencies": {
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

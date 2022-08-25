@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
     "resolveJsonModule": true,
-    "target": "es2016",
-    "module": "commonjs",
+    "target": "ES2018",
+    "lib": ["es2018"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "rootDir": "./",
+    "outDir": "./lib/node",
     "types": [
       "node",
       "jest"
@@ -12,7 +15,6 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "outDir": "./lib",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
