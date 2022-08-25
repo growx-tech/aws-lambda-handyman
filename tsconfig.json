@@ -11,7 +11,7 @@
       "node",
       "jest"
     ],
-    "declaration": true,
+    "declaration": false,
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
