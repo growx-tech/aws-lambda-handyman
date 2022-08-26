@@ -22,11 +22,13 @@ class SpamBot {
 export const handler = SpamBot.handle
 ```
 
-[![Test, Build and Publish](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/npm-publish.yml)
+[![Test, Build and Publish](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/test-build-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/test-build-publish.yml)
+![npm](https://img.shields.io/npm/dt/aws-lambda-handyman)
+![coverage](static/coverage-badge.svg)
 
 <p align="center">
     <a href='https://www.growy.nl/' target="_blank">
-        <img src="./static/growy-logo.png" alt="Growy Logo">
+        <img src="./static/growy-logo.svg" alt="Growy Logo" width="200px">
     </a>
 </p>
 
@@ -281,7 +283,7 @@ use [@TransformBoolean](#transformboolean) like so:
 class QueryTypes {
   @TransformBoolean() // 👈 use this 🎃
   @IsBoolean()
-  myBool: boolean 
+  myBool: boolean
 }
 
 class HandlerTest {
@@ -473,6 +475,6 @@ class IsBalloonInflated {
 - [ ] possibly cull undefined properties in validated objects
 - [ ] non promise response functions
 - [ ] setup branch protection
-  - [ ] add team to collaborators
+    - [ ] add team to collaborators
 - [ ] add coverage badge
 - [ ] make esm build for tree-shake, make cjs build for interop

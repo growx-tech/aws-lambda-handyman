@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   roots: ['./test'],
   collectCoverage: true,
+  coverageReporters: ['json-summary'],
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.test.json'
