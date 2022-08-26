@@ -41,10 +41,7 @@ test('Handler options', async () => {
 
   class HandlerTest {
     @Handler(options)
-    static async handle(@Body() body: BodyType,
-                        @Paths() paths: PathType,
-                        @Queries() queries: QueriesType) {
-    }
+    static async handle(@Body() body: BodyType, @Paths() paths: PathType, @Queries() queries: QueriesType) {}
   }
 
   //@ts-ignore
@@ -142,7 +139,7 @@ test('Handler has Event param', async () => {
     @Handler()
     static async handle(
       @Event()
-        event: APIGatewayProxyEventBase<APIGatewayEventDefaultAuthorizerContext>
+      event: APIGatewayProxyEventBase<APIGatewayEventDefaultAuthorizerContext>
     ) {
       return arguments
     }
@@ -212,8 +209,7 @@ test('Handler has Paths param, and is called with unexpected payload', async () 
 
   class HandlerTest {
     @Handler()
-    static async handle(@Paths() paths: PathType) {
-    }
+    static async handle(@Paths() paths: PathType) {}
   }
 
   //@ts-ignore
@@ -264,8 +260,7 @@ test('Handler has Body param, and is called with unexpected payload', async () =
 
   class HandlerTest {
     @Handler()
-    static async handle(@Body() body: BodyType) {
-    }
+    static async handle(@Body() body: BodyType) {}
   }
 
   //@ts-ignore
@@ -324,8 +319,7 @@ test('Handler has Queries param, and is called with unexpected payload', async (
 
   class HandlerTest {
     @Handler()
-    static async handle(@Queries() queries: QueriesType) {
-    }
+    static async handle(@Queries() queries: QueriesType) {}
   }
 
   //@ts-ignore

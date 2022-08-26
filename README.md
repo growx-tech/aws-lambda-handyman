@@ -38,19 +38,19 @@ export const handler = SpamBot.handle
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Decorators](#decorators)
-    - [Method Decorators](#method-decorators)
-        - [@Handler()](#handler)
-            - [@Handler(options)](#handleroptions-transformvalidateoptions)
-            - [Validation and Injection](#validation-and-injection)
-            - [Validation Caveats](#validation-caveats)
-    - [Function Param Decorators](#function-param-decorators)
-        - [@Event()](#event)
-        - [@Ctx()](#ctx)
-        - [@Paths()](#paths)
-        - [@Body()](#body)
-        - [@Queries()](#queries)
-    - [Transformer Decorators](#transformer-decorators)
-        - [@TransformBoolean()](#transformboolean)
+  - [Method Decorators](#method-decorators)
+    - [@Handler()](#handler)
+      - [@Handler(options)](#handleroptions-transformvalidateoptions)
+      - [Validation and Injection](#validation-and-injection)
+      - [Validation Caveats](#validation-caveats)
+  - [Function Param Decorators](#function-param-decorators)
+    - [@Event()](#event)
+    - [@Ctx()](#ctx)
+    - [@Paths()](#paths)
+    - [@Body()](#body)
+    - [@Queries()](#queries)
+  - [Transformer Decorators](#transformer-decorators)
+    - [@TransformBoolean()](#transformboolean)
 - [Http Errors](#httperrors)
 - [Http Responses](#httpresponses)
 
@@ -68,7 +68,7 @@ Since we use `class-validator` and `class-transformer` under the hood we need to
 npm i class-transformer class-validator
 ```
 
-Next we need to enable these options in our ```.tsconfig``` file
+Next we need to enable these options in our `.tsconfig` file
 
 ```json
 {
@@ -78,8 +78,6 @@ Next we need to enable these options in our ```.tsconfig``` file
 ```
 
 ## Basic Usage
-
-[//]: # (TODO account delete rename into something different for different iterations)
 
 ```typescript
 class CustomBodyType {
@@ -100,26 +98,28 @@ export const handler = AccountDelete.handle
 
 #### Let's break it down.
 
-1. We create a class with the shape we expect ```CustomBodyType```
+1. We create a class with the shape we expect `CustomBodyType`
 2. We decorate the properties we want validated with any of
    the [decorators of class-validator](https://github.com/typestack/class-validator#validation-decorators)
-   e.g. ```@IsEmail()```
-3. We create a class that would hold our handler method, in this case ```AccountDeleteHandler```
-   and ```static async handle(){}```
-4. We decorate ```handle()``` with the ```@Handler()``` decorator
-5. We decorate the method's parameter with ```@Body()``` and cast it to the expected shape i.e. ```CustomBodyType```
-7. We can readily use the automatically validated method parameter, in this case the `@Body() { email }: CustomBodyType`
+   e.g. `@IsEmail()`
+3. We create a class that would hold our handler method, in this case `AccountDeleteHandler`
+   and `static async handle(){}`
+4. We decorate `handle()` with the `@Handler()` decorator
+5. We decorate the method's parameter with `@Body()` and cast it to the expected shape i.e. `CustomBodyType`
+6. We can readily use the automatically validated method parameter, in this case the `@Body() { email }: CustomBodyType`
 
 #### Decorators can be mixed and matched:
 
 ```typescript
 class KitchenSink {
   @Handler()
-  static async handle(@Body() body: BodyType,
-                      @Event() evt: APIGatewayProxyEventBase<T>,
-                      @Paths() paths: PathsType,
-                      @Ctx() ctx: Context,
-                      @Queries() queries: QueriesType) {
+  static async handle(
+    @Body() body: BodyType,
+    @Event() evt: APIGatewayProxyEventBase<T>,
+    @Paths() paths: PathsType,
+    @Ctx() ctx: Context,
+    @Queries() queries: QueriesType
+  ) {
     return ok({ body, paths, queries, evt, ctx })
   }
 }
@@ -129,7 +129,7 @@ class KitchenSink {
 
 ### Method Decorators
 
-### ```@Handler()```
+### `@Handler()`
 
 This decorator needs to be applied to the handler of our http event. The handler function **needs** to be `async` or
 needs
@@ -138,8 +138,7 @@ to return a `Promise`.
 ```typescript
 class AccountDelete {
   @Handler()
-  static async handle() {
-  }
+  static async handle() {}
 }
 ```
 
@@ -177,8 +176,7 @@ class BodyType {
 
 class SpamBot {
   @Handler()
-  static async handle(@Body() { email }: BodyType) {
-  }
+  static async handle(@Body() { email }: BodyType) {}
 }
 ```
 
@@ -213,8 +211,7 @@ class PathType {
 
 class HandlerTest {
   @Handler()
-  static async handle(@Paths() paths: PathType) {
-  }
+  static async handle(@Paths() paths: PathType) {}
 }
 ```
 
@@ -223,10 +220,10 @@ It would return an error. See [Error Handling](#error-handling)
 Because `aws-lambda-handyman` uses [class-transformer](https://github.com/typestack/class-transformer), this issue can
 be solved in several ways:
 
-1. Decorate the type with a  [class-transformer](https://github.com/typestack/class-transformer) decorator
+1. Decorate the type with a [class-transformer](https://github.com/typestack/class-transformer) decorator
 
 ```typescript
-  class PathType {
+class PathType {
   @Type(() => Number) // 👈 Decorator from `class-transformer`
   @IsInt()
   intParam: number
@@ -236,10 +233,9 @@ be solved in several ways:
 2. Enable `enableImplicitConversion` in `@Handler(options)`
 
 ```typescript
-class HandlerTest {    // 👇 
-  @Handler({ enableImplicitConversion: true })
-  static async handle(@Paths() paths: PathType) {
-  }
+class HandlerTest {
+  @Handler({ enableImplicitConversion: true }) // 👈
+  static async handle(@Paths() paths: PathType) {}
 }
 ```
 
@@ -266,7 +262,7 @@ class QueryTypes {
 class HandlerTest {
   @Handler({ enableImplicitConversion: true })
   static async handle(@Queries() { myBool }: QueryTypes) {
-    //            myBool is 'true'   👆 
+    //            myBool is 'true'   👆
   }
 }
 ```
@@ -277,7 +273,7 @@ implementation
 of [MDN Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 We can fix this in the way described
-in  [Class Transformer Issue 626,](https://github.com/typestack/class-transformer/issues/626) or we could
+in [Class Transformer Issue 626,](https://github.com/typestack/class-transformer/issues/626) or we could
 use [@TransformBoolean](#transformboolean) like so:
 
 ```typescript
@@ -289,8 +285,7 @@ class QueryTypes {
 
 class HandlerTest {
   @Handler()
-  static async handle(@Queries() { myBool }: QueryTypes) {
-  }
+  static async handle(@Queries() { myBool }: QueryTypes) {}
 }
 ```
 
@@ -358,31 +353,29 @@ You could also extend `HttpError` for commonly occuring error types like in [Dyn
 
 ### Function Param Decorators
 
-### ```@Event()```
+### `@Event()`
 
 Injects the `APIGatewayProxyEventBase<T>` object, passed on to the function at runtime.
 
 ```typescript
 class AccountDelete {
   @Handler()
-  static async handle(@Event() evt) {
-  }
+  static async handle(@Event() evt) {}
 }
 ```
 
-### ```@Ctx()```
+### `@Ctx()`
 
 Injects the `Context` object, passed on to the function at runtime.
 
 ```typescript
 class AccountDelete {
   @Handler()
-  static async handle(@Ctx() context) {
-  }
+  static async handle(@Ctx() context) {}
 }
 ```
 
-### ```@Paths()```
+### `@Paths()`
 
 Validates the http event's path parameters and injects them into the decorated method parameter.
 
@@ -396,12 +389,11 @@ class PathType {
 
 class CarFetch {
   @Handler()
-  static async handle(@Paths() paths: PathType) {
-  }
+  static async handle(@Paths() paths: PathType) {}
 }
 ```
 
-### ```@Body()```
+### `@Body()`
 
 Validates the http event's body and injects them it into the decorated method parameter.
 
@@ -413,12 +405,11 @@ class BodyType {
 
 class CarHandler {
   @Handler()
-  static async handle(@Body() paths: BodyType) {
-  }
+  static async handle(@Body() paths: BodyType) {}
 }
 ```
 
-### ```@Queries()```
+### `@Queries()`
 
 Validates the http event's query parameters and injects them into the decorated method parameter.
 
@@ -432,8 +423,7 @@ class QueriesType {
 
 class IsBalloonInflated {
   @Handler()
-  static async handle(@Queries() queries: QueriesType) {
-  }
+  static async handle(@Queries() queries: QueriesType) {}
 }
 ```
 
@@ -443,39 +433,39 @@ class IsBalloonInflated {
 
 ## HttpErrors
 
-### ```HttpError ```
+### `HttpError `
 
 ### `DynamoError`
 
 ## HttpResponses
 
-```response(code: number, body?: object)```
+`response(code: number, body?: object)`
 
-```ok(body?: object)```
+`ok(body?: object)`
 
-```created(body?: object)```
+`created(body?: object)`
 
-```badRequest(body?: object)```
+`badRequest(body?: object)`
 
-```unauthorized(body?: object)```
+`unauthorized(body?: object)`
 
-```notFound(body?: object)```
+`notFound(body?: object)`
 
-```imaTeapot(body?: object)```
+`imaTeapot(body?: object)`
 
-```internalServerError(body?: object)```
+`internalServerError(body?: object)`
 
 # TODO
 
 - [ ] Documentation
-    - [ ] http responses
-    - [ ] http errors
+  - [ ] http responses
+  - [ ] http errors
 - [ ] add 'reflect-metadata' in installation
 - [ ] Linting
 - [ ] Prettier
 - [ ] possibly cull undefined properties in validated objects
 - [ ] non promise response functions
 - [ ] setup branch protection
-    - [ ] add team to collaborators
+  - [ ] add team to collaborators
 - [ ] add coverage badge
 - [ ] make esm build for tree-shake, make cjs build for interop
