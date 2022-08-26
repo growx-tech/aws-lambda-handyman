@@ -22,9 +22,10 @@ class SpamBot {
 export const handler = SpamBot.handle
 ```
 
+![npm-downloads](https://img.shields.io/npm/dt/aws-lambda-handyman)
+![npm-version](https://img.shields.io/npm/v/aws-lambda-handyman)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/aws-lambda-handyman)
 [![Test, Build and Publish](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/test-build-publish.yml/badge.svg?branch=master)](https://github.com/growx-tech/aws-lambda-handyman/actions/workflows/test-build-publish.yml)
-![npm](https://img.shields.io/npm/v/aws-lambda-handyman)
-![npm](https://img.shields.io/npm/dt/aws-lambda-handyman)
 ![coverage](static/coverage-badge.svg)
 
 <p align="center">

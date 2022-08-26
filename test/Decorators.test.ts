@@ -55,8 +55,7 @@ test('Handler options', async () => {
 test('Handler method is not async', () => {
   class HandlerToTest {
     @Handler()
-    static handle() {
-    }
+    static handle() {}
   }
 
   expect(() => {
