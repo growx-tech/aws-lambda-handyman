@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "AWS Lambda TypeScript validation made easy 🏄",
   "main": "./lib/cjs/src/index.js",
   "typings": "./lib/types/src/index.d.ts",
@@ -20,7 +20,7 @@
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:es2015": "tsc --project tsconfig.es2015.json",
     "build:types": "tsc --project tsconfig.types.json",
-    "test": "jest ; npm run badge >/dev/null 2>&1",
+    "test": "jest && npm run badge >/dev/null 2>&1",
     "badge": "make-coverage-badge --output-path ./static/coverage-badge.svg ",
     "prettier": "prettier --write .",
     "dev:link": "npm link"
