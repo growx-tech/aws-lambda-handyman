@@ -15,37 +15,37 @@ export const bodyIsNotProperJSON = 'Provided body is not proper JSON 😬'
 export const handlerNotAsyncMessage = '⚠️ The methods that you decorate with @Handler, need to be async / need to return a Promise ⚠️ '
 
 export function Event() {
-  return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     Reflect.defineMetadata(eventMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
 export function Ctx() {
-  return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     Reflect.defineMetadata(contextMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
 export function Paths() {
-  return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     Reflect.defineMetadata(pathsMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
 export function Body() {
-  return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     Reflect.defineMetadata(bodyMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
 export function Queries() {
-  return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     Reflect.defineMetadata(queriesMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
 export function Handler(options?: TransformValidateOptions) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     let method = descriptor.value
 
     descriptor.value = function () {
@@ -107,7 +107,7 @@ export function Handler(options?: TransformValidateOptions) {
           return internalServerError({ message })
         })
       } catch (e) {
-        if (e instanceof Array && e?.[0] instanceof ValidationError) return badRequest(e.map((err) => err.constraints))
+        if (e instanceof Array && e?.[0] instanceof ValidationError) return badRequest({ message: validationErrorsToMessage(e) })
 
         console.error('Oops 😬', e)
         if (e instanceof TypeError && e.message === `Cannot read properties of undefined (reading 'catch')`) throw new Error(handlerNotAsyncMessage)
@@ -123,4 +123,8 @@ function transformValidateOrReject<T extends object, V extends object>(cls: Clas
   if (validationErrors.length) throw validationErrors
 
   return instance
+}
+
+function validationErrorsToMessage(errors: ValidationError[]) {
+  return errors.map((e) => Object.values(e.constraints || []).join(', ')).join('. ') + '.'
 }

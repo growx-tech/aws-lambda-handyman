@@ -14,7 +14,7 @@ import {
 } from '../src'
 import * as mockData from '../test/mock/httpEventContext.json'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
-import { IsBoolean, IsEmail, IsFQDN, IsHexColor, IsInt, IsSemVer, IsUUID } from 'class-validator'
+import { IsBoolean, IsEmail, IsHexColor, IsInt, IsSemVer, IsUUID } from 'class-validator'
 import * as ct from 'class-transformer'
 import { Type } from 'class-transformer'
 
@@ -312,8 +312,6 @@ test('Handler has Queries param, and is called with unexpected payload', async (
     version: string
     @IsUUID()
     uuid: string
-    @IsFQDN()
-    fqdn: boolean
   }
 
   class HandlerTest {

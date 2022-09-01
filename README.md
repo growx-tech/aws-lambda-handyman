@@ -166,13 +166,15 @@ export type TransformValidateOptions = ValidatorOptions & ClassTransformOptions
 ## Validation and Injection
 
 Behind the scenes **AWS Lambda Handyman** uses `class-validator` for validation, so if any validation goes wrong we
-simply return a 400 with the `constraints` of
+simply return a 400 with the concatenated `constraints` of
 the [ValidationError[]](https://github.com/typestack/class-validator#validation-errors) :
 
 ```typescript
 class BodyType {
   @IsEmail()
-  email: string
+  userEmail: string
+  @IsInt({ message: 'My Custom error message 🥸' })
+  uuid: string
 }
 
 class SpamBot {
@@ -191,11 +193,13 @@ So if the preceding handler gets called with anything other than a body, contain
 
 The following response is sent:
 
-```json
+```text
 HTTP/1.1 400 Bad Request
 content-type: application/json; charset=utf-8
 
-[{"isEmail": "email must be an email"}]
+{
+    "message":"userEmail must be an email. My Custom error message 🥸."
+}
 ```
 
 If there received request is correct, the decorated property is injected into the method parameter, is ready for use.
@@ -318,12 +322,12 @@ class SpamBot {
 
 Returns:
 
-```json
+```text
 HTTP/1.1 500 Internal Server Error
 content-type: application/json; charset=utf-8
 
 {
-"message": "I've fallen... and I can't get up 🐸"
+    "message": "I've fallen... and I can't get up 🐸"
 }
 ```
 
@@ -341,12 +345,12 @@ class SpamBot {
 
 Which returns:
 
-```json
+```text
 HTTP/1.1 501 Not Implemented
 content-type: application/json; charset=utf-8
 
 {
-"message": "Oopsie Doopsie 🐸"
+    "message": "Oopsie Doopsie 🐸"
 }
 ```
 
@@ -459,6 +463,7 @@ class IsBalloonInflated {
 # TODO
 
 - [ ] Documentation
+  - [ ] add optional example
   - [ ] http responses
   - [ ] http errors
 - [ ] Linting
