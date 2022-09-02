@@ -126,5 +126,16 @@ function transformValidateOrReject<T extends object, V extends object>(cls: Clas
 }
 
 function validationErrorsToMessage(errors: ValidationError[]) {
-  return errors.map((e) => Object.values(e.constraints || []).join(', ')).join('. ') + '.'
+  return errors.map((e) => getConstraints(e).join(', ')).join('. ') + '.'
+}
+
+function getConstraints(obj: ValidationError): string[] {
+  if (!obj.children || !obj.children.length) {
+    return Object.values(obj.constraints || [])
+  }
+
+  return obj.children.reduce((constraints: string[], o: ValidationError) => {
+    constraints.push(...getConstraints(o))
+    return constraints
+  }, [])
 }

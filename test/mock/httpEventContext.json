@@ -41,6 +41,14 @@
     },
     "body": "{,123}"
   },
+  "eventWithBrokenNestedBody": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      "Host": "localhost:3000"
+    },
+    "body": "{\n    \"email\": \"slas@vi.co.to\",\n    \"hexColor\": \"#abcdef\",\n    \"integerNumber\": 1,\n \"nested\":{\"weight\": \"n\", \"innerNested\":{\"name\": 4}}\n}"
+  },
   "eventWithNoBody": {
     "headers": {
       "Content-Type": "application/json",

@@ -12,13 +12,14 @@ import {
   TransformBoolean,
   TransformValidateOptions
 } from '../src'
+import 'reflect-metadata'
 import * as mockData from '../test/mock/httpEventContext.json'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
-import { IsBoolean, IsEmail, IsFQDN, IsHexColor, IsInt, IsSemVer, IsUUID } from 'class-validator'
+import { IsBoolean, IsEmail, IsFQDN, IsHexColor, IsInt, IsNumber, IsSemVer, IsString, IsUUID, Length, ValidateNested } from 'class-validator'
 import * as ct from 'class-transformer'
 import { Type } from 'class-transformer'
 
-const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithNoBody, eventWithNoQueries } = mockData
+const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithBrokenNestedBody, eventWithNoBody, eventWithNoQueries } = mockData
 const customMessage = 'Custom message 123 xd teapot bois'
 const customCode = 418
 
@@ -279,6 +280,50 @@ test('Handler has Body param, and is called with unexpected payload', async () =
   expect(statusCode).toEqual(400)
   expect(body).not.toContain('email')
   expect(body).toContain('customBool')
+})
+
+test('Handler has Body param, and is called with payload having nested objects with errors', async () => {
+  class InnerNested {
+    @IsString()
+    @Length(5, 7)
+    name: string
+    @IsString()
+    lastName: string
+  }
+
+  class Nested {
+    @IsNumber()
+    weight: number
+    @Type(() => InnerNested)
+    @ValidateNested()
+    innerNested: InnerNested
+  }
+
+  class BodyType {
+    @IsEmail()
+    email: string
+    @IsBoolean()
+    customBool: string
+    @Type(() => Nested)
+    @ValidateNested()
+    nested: Nested
+  }
+
+  class HandlerTest {
+    @Handler()
+    static async handle(@Body() body: BodyType) {}
+  }
+
+  //@ts-ignore
+  const { statusCode, body } = await HandlerTest.handle(eventWithBrokenNestedBody, context)
+
+  expect(statusCode).toEqual(400)
+  expect(body).not.toContain('email')
+  expect(body).toContain('customBool')
+  expect(body).toContain('name')
+  expect(body).toContain('lastName')
+  expect(body).toContain('must be longer')
+  expect(body).toContain('weight')
 })
 
 test('Handler has Queries param, and is called with expected payload', async () => {
