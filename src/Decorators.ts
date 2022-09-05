@@ -129,13 +129,13 @@ function validationErrorsToMessage(errors: ValidationError[]) {
   return errors.map((e) => getConstraints(e).join(', ')).join('. ') + '.'
 }
 
-function getConstraints(obj: ValidationError): string[] {
-  if (!obj.children || !obj.children.length) {
-    return Object.values(obj.constraints || [])
+function getConstraints(error: ValidationError): string[] {
+  if (!error.children || !error.children.length) {
+    return Object.values(error.constraints || [])
   }
 
-  return obj.children.reduce((constraints: string[], o: ValidationError) => {
-    constraints.push(...getConstraints(o))
+  return error.children.reduce((constraints: string[], e: ValidationError) => {
+    constraints.push(...getConstraints(e))
     return constraints
   }, [])
 }
