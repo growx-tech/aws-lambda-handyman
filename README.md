@@ -468,5 +468,4 @@ class IsBalloonInflated {
   - [ ] http responses
   - [ ] http errors
 - [ ] Linting
-- [ ] setup branch protection
-  - [ ] add team to collaborators
+- [ ] add team to collaborators
