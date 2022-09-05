@@ -187,7 +187,8 @@ So if the preceding handler gets called with anything other than a body, contain
 
 ```json
 {
-  "email": "*some email*"
+  "userEmail": "<some-email>",
+  "uuid": "<some-uuid>"
 }
 ```
 
@@ -202,7 +203,7 @@ content-type: application/json; charset=utf-8
 }
 ```
 
-If there received request is correct, the decorated property is injected into the method parameter, is ready for use.
+If the incoming request is correct, the decorated property is injected into the method parameter and is ready for use.
 
 ## Validation Caveats
 
@@ -467,5 +468,4 @@ class IsBalloonInflated {
   - [ ] http responses
   - [ ] http errors
 - [ ] Linting
-- [ ] setup branch protection
-  - [ ] add team to collaborators
+- [ ] add team to collaborators
