@@ -355,7 +355,7 @@ content-type: application/json; charset=utf-8
 }
 ```
 
-You could also extend `HttpError` for commonly occuring error types like in [DynamoError()](#dynamoerror)
+You could also extend `HttpError` for commonly occurring error types like in [DynamoError()](#dynamoerror)
 
 ### Function Param Decorators
 
