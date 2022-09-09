@@ -82,7 +82,7 @@ test('Handler catches thrown HttpError', async () => {
   class HandlerTest {
     @Handler()
     static async handle() {
-      throw new HttpError(customMessage, customCode)
+      throw new HttpError(customCode, customMessage)
     }
   }
 

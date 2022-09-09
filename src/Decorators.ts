@@ -98,6 +98,7 @@ export function Handler(options?: TransformValidateOptions) {
         }
 
         return method.apply(this, newArguments).catch((e: any) => {
+          console.error(e)
           if (e instanceof HttpError) {
             return response(e.code, { message: e.message })
           }

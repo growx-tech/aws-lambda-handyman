@@ -174,21 +174,21 @@ class BodyType {
   @IsEmail()
   userEmail: string
   @IsInt({ message: 'My Custom error message 🥸' })
-  uuid: string
+  myInt: number
 }
 
 class SpamBot {
   @Handler()
-  static async handle(@Body() { email }: BodyType) {}
+  static async handle(@Body() { userEmail, myInt }: BodyType) {}
 }
 ```
 
-So if the preceding handler gets called with anything other than a body, containing:
+So if the preceding handler gets called with anything other than a body, with the following shape:
 
 ```json
 {
-  "userEmail": "<some-email>",
-  "uuid": "<some-uuid>"
+  "userEmail": "my@mail.gg",
+  "myInt": 4321
 }
 ```
 
@@ -339,7 +339,7 @@ message and response code:
 class SpamBot {
   @Handler()
   static async handle() {
-    throw new HttpError('Oopsie Doopsie 🐸', 501)
+    throw new HttpError(501, 'Oopsie Doopsie 🐸')
   }
 }
 ```
