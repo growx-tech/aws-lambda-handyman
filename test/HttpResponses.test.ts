@@ -6,7 +6,7 @@ test('response', async () => {
   const badRequestResponse = await response(421)
 
   expect(badRequestResponse.statusCode).toEqual(421)
-  expect(badRequestResponse.body).toEqual(JSON.stringify({}))
+  expect(badRequestResponse.body).toEqual(undefined)
 })
 
 test('ok', async () => {
