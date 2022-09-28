@@ -80,7 +80,7 @@ export function Handler(options?: TransformValidateOptions) {
           try {
             body = JSON.parse(event.body ?? '')
           } catch (e) {
-            console.log(e)
+            console.error(e)
             return badRequest({ message: bodyIsNotProperJSON })
           }
 
