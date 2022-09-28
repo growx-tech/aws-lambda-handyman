@@ -1,7 +1,7 @@
 import { APIGatewayProxyResult } from 'aws-lambda'
 
 // Todo change to non promise and wrap on call
-export async function response(code: number, body: object | undefined | null = {}): Promise<APIGatewayProxyResult> {
+export async function response(code: number, body: object | undefined | null = undefined): Promise<APIGatewayProxyResult> {
   return {
     headers: {
       'Content-Type': 'application/json',
