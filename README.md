@@ -63,10 +63,10 @@ First off we need to install the package
 npm i aws-lambda-handyman
 ```
 
-Since we use `class-validator` and `class-transformer` under the hood we need to install them for their decorators
+Since we use `class-validator` and `class-transformer` under the hood we need to install them for their decorators. We also use `reflect-metadata`
 
 ```shell
-npm i class-transformer class-validator
+npm i class-transformer class-validator reflect-metadata
 ```
 
 Next we need to enable these options in our `.tsconfig` file
@@ -81,6 +81,8 @@ Next we need to enable these options in our `.tsconfig` file
 ## Basic Usage
 
 ```typescript
+import 'reflect-metadata'
+
 class CustomBodyType {
   @IsEmail()
   email: string
@@ -99,15 +101,16 @@ export const handler = AccountDelete.handle
 
 #### Let's break it down.
 
-1. We create a class with the shape we expect `CustomBodyType`
-2. We decorate the properties we want validated with any of
+1. We import `reflect-metadata`
+2. We create a class with the shape we expect `CustomBodyType`
+3. We decorate the properties we want validated with any of
    the [decorators of class-validator](https://github.com/typestack/class-validator#validation-decorators)
    e.g. `@IsEmail()`
-3. We create a class that would hold our handler method, in this case `AccountDeleteHandler`
+4. We create a class that would hold our handler method, in this case `AccountDeleteHandler`
    and `static async handle(){}`
-4. We decorate `handle()` with the `@Handler()` decorator
-5. We decorate the method's parameter with `@Body()` and cast it to the expected shape i.e. `CustomBodyType`
-6. We can readily use the automatically validated method parameter, in this case the `@Body() { email }: CustomBodyType`
+5. We decorate `handle()` with the `@Handler()` decorator
+6. We decorate the method's parameter with `@Body()` and cast it to the expected shape i.e. `CustomBodyType`
+7. We can readily use the automatically validated method parameter, in this case the `@Body() { email }: CustomBodyType`
 
 #### Decorators can be mixed and matched:
 
