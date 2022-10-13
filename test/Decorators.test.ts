@@ -6,6 +6,7 @@ import {
   Event,
   Handler,
   handlerNotAsyncMessage,
+  Headers,
   HttpError,
   Paths,
   Queries,
@@ -15,11 +16,25 @@ import {
 import 'reflect-metadata'
 import * as mockData from '../test/mock/httpEventContext.json'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
-import { IsBoolean, IsEmail, IsFQDN, IsHexColor, IsInt, IsNumber, IsSemVer, IsString, IsUUID, Length, ValidateNested } from 'class-validator'
+import {
+  IsBoolean,
+  IsEmail,
+  IsFQDN,
+  IsHexColor,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsSemVer,
+  IsString,
+  IsUUID,
+  Length,
+  ValidateNested
+} from 'class-validator'
 import * as ct from 'class-transformer'
 import { Type } from 'class-transformer'
 
-const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithBrokenNestedBody, eventWithNoBody, eventWithNoQueries } = mockData
+const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithBrokenNestedBody, eventWithNoBody, eventWithNoQueries, emptyEvent } =
+  mockData
 const customMessage = 'Custom message 123 xd teapot bois'
 const customCode = 418
 
@@ -380,4 +395,47 @@ test('Handler has Queries param, and is called with unexpected payload', async (
   expect(body).not.toContain('version')
   expect(body).toContain('uuid')
   expect(body).toContain('fqdn')
+})
+
+test('Handler has Headers param, and is called with expected payload', async () => {
+  class HeadersType {
+    @IsString()
+    @IsNotEmpty()
+    authorization: string
+  }
+
+  class HandlerTest {
+    @Handler()
+    static async handle(@Headers() headers: HeadersType) {
+      return arguments
+    }
+  }
+
+  //@ts-ignore
+  const calledWithArgs = await HandlerTest.handle(event, context)
+
+  expect(calledWithArgs.length).toEqual(1)
+
+  const [injectedHeaders] = calledWithArgs
+  expect(injectedHeaders.authorization).toEqual(event.headers.authorization)
+})
+
+test('Handler has Headers param, and is called with unexpected payload', async () => {
+  class HeadersType {
+    @IsString()
+    @IsNotEmpty()
+    authorization: string
+  }
+
+  class HandlerTest {
+    @Handler()
+    static async handle(@Headers() headers: HeadersType) {
+      return arguments
+    }
+  }
+
+  //@ts-ignore
+  const { statusCode: codeNoHeaders, body: bodyNoHeaders } = await HandlerTest.handle(emptyEvent, context)
+  expect(codeNoHeaders).toEqual(400)
+  expect(bodyNoHeaders).toContain('authorization')
 })

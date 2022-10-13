@@ -1,6 +1,7 @@
 {
   "event": {
     "headers": {
+      "authorization": "Bearer xyskzhds",
       "Content-Type": "application/json",
       "Accept": "*/*",
       "Host": "localhost:3000"
@@ -62,5 +63,6 @@
       "Accept": "*/*",
       "Host": "localhost:3000"
     }
-  }
+  },
+  "emptyEvent": {}
 }

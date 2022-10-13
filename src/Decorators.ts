@@ -7,6 +7,7 @@ import { badRequest, HttpError, internalServerError, response, TransformValidate
 const eventMetadataKey = Symbol('Event')
 const contextMetadataKey = Symbol('Ctx')
 const pathsMetadataKey = Symbol('Paths')
+const headersMetadataKey = Symbol('Headers')
 const bodyMetadataKey = Symbol('Body')
 const queriesMetadataKey = Symbol('Queries')
 
@@ -41,6 +42,12 @@ export function Body() {
 export function Queries() {
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     Reflect.defineMetadata(queriesMetadataKey, parameterIndex, target, propertyKey)
+  }
+}
+
+export function Headers() {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+    Reflect.defineMetadata(headersMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
@@ -95,6 +102,13 @@ export function Handler(options?: TransformValidateOptions) {
           const queriesInstance = transformValidateOrReject(paramTypes[queriesParamIndex], event.queryStringParameters ?? {}, options)
 
           newArguments[queriesParamIndex] = queriesInstance
+        }
+
+        const headersParamIndex: number | undefined = Reflect.getOwnMetadata(headersMetadataKey, target, propertyKey)
+        if (headersParamIndex !== undefined) {
+          const headersInstance = transformValidateOrReject(paramTypes[headersParamIndex], event.headers ?? {}, options)
+
+          newArguments[headersParamIndex] = headersInstance
         }
 
         return method.apply(this, newArguments).catch((e: any) => {

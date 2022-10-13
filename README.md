@@ -50,6 +50,7 @@ export const handler = SpamBot.handle
     - [@Paths()](#paths)
     - [@Body()](#body)
     - [@Queries()](#queries)
+    - [@Headers()](#headers)
   - [Transformer Decorators](#transformer-decorators)
     - [@TransformBoolean()](#transformboolean)
 - [Http Errors](#httperrors)
@@ -433,6 +434,25 @@ class QueriesType {
 class IsBalloonInflated {
   @Handler()
   static async handle(@Queries() queries: QueriesType) {}
+}
+```
+
+### `@Headers()`
+
+Validates the http event's headers and injects them into the decorated method parameter.
+
+For example making a http request with headers ["authorization" = "Bearer XYZ"] would be handled like this:
+
+```typescript
+class HeadersType {
+  @IsString()
+  @IsNotEmpty()
+  authoriation: string
+}
+
+class IsBalloonInflated {
+  @Handler()
+  static async handle(@Headers() { authoriation }: HeadersType) {}
 }
 ```
 
