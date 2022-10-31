@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "AWS Lambda TypeScript validation made easy 🏄",
   "main": "./lib/cjs/src/index.js",
   "typings": "./lib/types/src/index.d.ts",
@@ -23,6 +23,7 @@
     "test": "jest && npm run badge >/dev/null 2>&1",
     "badge": "make-coverage-badge --output-path ./static/coverage-badge.svg ",
     "prettier": "prettier --write .",
+    "pre-pr": "npm run prettier && npm run test",
     "dev:link": "npm link"
   },
   "sideEffects": false,
