@@ -1,6 +1,5 @@
 import {
   Body,
-  bodyIsNotProperJSON,
   Ctx,
   defaultInternalServerErrorMessage,
   Event,
@@ -24,6 +23,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsSemVer,
   IsString,
   IsUUID,
@@ -279,22 +279,32 @@ test('Handler has Body param, and is called with unexpected payload', async () =
   }
 
   //@ts-ignore
-  const { statusCode: codeBrokenJSON, body: bodyBrokenJson } = await HandlerTest.handle(eventWithBrokenBody, context)
-
-  expect(codeBrokenJSON).toEqual(400)
-  expect(bodyBrokenJson).toContain(bodyIsNotProperJSON)
-
-  //@ts-ignore
-  const { statusCode: statusCodeNoBody, body: bodyNoBody } = await HandlerTest.handle(eventWithNoBody, context)
-
-  expect(statusCodeNoBody).toEqual(400)
-  expect(bodyNoBody).toContain(bodyIsNotProperJSON)
-
-  //@ts-ignore
   const { statusCode, body } = await HandlerTest.handle(event, context)
   expect(statusCode).toEqual(400)
   expect(body).not.toContain('email')
   expect(body).toContain('customBool')
+})
+
+test('Handler has Body with optional parameter, and is called with unexpected payload', async () => {
+  const message = 'okie dokie 👽'
+
+  class BodyType {
+    @IsOptional()
+    @IsNumber()
+    weight?: number
+  }
+
+  class HandlerTest {
+    @Handler()
+    static async handle(@Body() body: BodyType) {
+      return { message }
+    }
+  }
+
+  //@ts-ignore
+  const { message: received } = await HandlerTest.handle(eventWithBrokenBody, context)
+
+  expect(message).toEqual(received)
 })
 
 test('Handler has Body param, and is called with payload having nested objects with errors', async () => {

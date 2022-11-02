@@ -12,8 +12,8 @@ const bodyMetadataKey = Symbol('Body')
 const queriesMetadataKey = Symbol('Queries')
 
 export const defaultInternalServerErrorMessage = 'Oops, something went wrong 😬'
-export const bodyIsNotProperJSON = 'Provided body is not proper JSON 😬'
-export const handlerNotAsyncMessage = '⚠️ The methods that you decorate with @Handler, need to be async / need to return a Promise ⚠️ '
+export const bodyIsNotProperJSON = `The request's body is not proper JSON 🤔`
+export const handlerNotAsyncMessage = '⚠️ Methods, decorated with @Handler, need to be async / need to return a Promise ⚠️ '
 
 export function Event() {
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
@@ -83,13 +83,7 @@ export function Handler(options?: TransformValidateOptions) {
 
         const bodyParamIndex: number | undefined = Reflect.getOwnMetadata(bodyMetadataKey, target, propertyKey)
         if (bodyParamIndex !== undefined) {
-          let body: object
-          try {
-            body = JSON.parse(event.body ?? '')
-          } catch (e) {
-            console.error(e)
-            return badRequest({ message: bodyIsNotProperJSON })
-          }
+          let body = parseBody(event.body)
 
           const bodyInstance = transformValidateOrReject(paramTypes[bodyParamIndex], body, options)
 
@@ -153,4 +147,16 @@ function getConstraints(error: ValidationError): string[] {
     constraints.push(...getConstraints(e))
     return constraints
   }, [])
+}
+
+function parseBody(body: string | null) {
+  let parsedBody = {}
+
+  try {
+    parsedBody = JSON.parse(body ?? '{}')
+  } catch (e) {
+    console.warn(bodyIsNotProperJSON, e)
+  }
+
+  return parsedBody
 }
