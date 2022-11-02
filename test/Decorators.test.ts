@@ -290,7 +290,7 @@ test('Handler has Body with optional parameter, and is called with unexpected pa
 
   class BodyType {
     @IsOptional()
-    @IsEmail()
+    @IsNumber()
     weight?: number
   }
 
