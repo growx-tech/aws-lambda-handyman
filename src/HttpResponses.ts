@@ -17,6 +17,8 @@ export const ok = (body?: object) => response(200, body)
 
 export const created = (body?: object) => response(201, body)
 
+export const noContent = (body?: object) => response(204, body)
+
 export const badRequest = (body?: object) => response(400, body)
 
 export const unauthorized = (body?: object) => response(401, body)

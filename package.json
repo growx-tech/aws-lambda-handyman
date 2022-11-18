@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-handyman",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "AWS Lambda TypeScript validation made easy 🏄",
   "main": "./lib/cjs/src/index.js",
   "typings": "./lib/types/src/index.d.ts",
