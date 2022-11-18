@@ -1,4 +1,4 @@
-import { badRequest, created, imaTeapot, internalServerError, notFound, ok, response, unauthorized } from '../src'
+import { badRequest, created, imaTeapot, internalServerError, noContent, notFound, ok, response, unauthorized } from '../src'
 
 const customBody = { message: `Hi, look at me! I'm a test message 🙌` }
 
@@ -20,6 +20,13 @@ test('created', async () => {
   const createdResponse = await created(customBody)
 
   expect(createdResponse.statusCode).toEqual(201)
+  expect(createdResponse.body).toEqual(JSON.stringify(customBody))
+})
+
+test('noContent', async () => {
+  const createdResponse = await noContent(customBody)
+
+  expect(createdResponse.statusCode).toEqual(204)
   expect(createdResponse.body).toEqual(JSON.stringify(customBody))
 })
 
