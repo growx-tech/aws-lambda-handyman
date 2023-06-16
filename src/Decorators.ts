@@ -155,7 +155,7 @@ function parseBody(body: string | null) {
   try {
     parsedBody = JSON.parse(body ?? '{}')
   } catch (e) {
-    console.warn(bodyIsNotProperJSON, e)
+    console.warn(bodyIsNotProperJSON, body, e)
   }
 
   return parsedBody
