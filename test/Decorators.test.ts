@@ -39,7 +39,7 @@ const customMessage = 'Custom message 123 xd teapot bois'
 const customCode = 418
 
 test('Handler options', async () => {
-  const options: TransformValidateOptions = { enableImplicitConversion: true }
+  const options: TransformValidateOptions = { enableImplicitConversion: true, forbidUnknownValues: false }
 
   const spy = jest.spyOn(ct, 'plainToInstance')
 
@@ -56,7 +56,7 @@ test('Handler options', async () => {
   }
 
   class HandlerTest {
-    @Handler(options)
+    @Handler()
     static async handle(@Body() body: BodyType, @Paths() paths: PathType, @Queries() queries: QueriesType) {}
   }
 

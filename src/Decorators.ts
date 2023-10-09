@@ -11,6 +11,8 @@ const headersMetadataKey = Symbol('Headers')
 const bodyMetadataKey = Symbol('Body')
 const queriesMetadataKey = Symbol('Queries')
 
+const defaultHandlerOptions = { enableImplicitConversion: true, forbidUnknownValues: false }
+
 export const defaultInternalServerErrorMessage = 'Oops, something went wrong 😬'
 export const bodyIsNotProperJSON = `The request's body is not proper JSON 🤔`
 export const handlerNotAsyncMessage = '⚠️ Methods, decorated with @Handler, need to be async / need to return a Promise ⚠️ '
@@ -51,7 +53,7 @@ export function Headers() {
   }
 }
 
-export function Handler(options?: TransformValidateOptions) {
+export function Handler(options: TransformValidateOptions = defaultHandlerOptions) {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     let method = descriptor.value
 
