@@ -1,9 +1,9 @@
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
 import { ClassConstructor, plainToInstance } from 'class-transformer'
-import { ValidationError, validateSync } from 'class-validator'
+import { validateSync, ValidationError } from 'class-validator'
 import 'reflect-metadata'
-import { ZodSchema } from 'zod'
-import { HttpError, TransformValidateOptions, badRequest, internalServerError, response } from '.'
+import { ZodError, ZodSchema } from 'zod'
+import { badRequest, HttpError, internalServerError, response, TransformValidateOptions } from '.'
 
 const eventMetadataKey = Symbol('Event')
 const contextMetadataKey = Symbol('Ctx')
@@ -120,6 +120,7 @@ export function Handler(options: TransformValidateOptions = defaultHandlerOption
         })
       } catch (e) {
         if (e instanceof Array && e?.[0] instanceof ValidationError) return badRequest({ message: validationErrorsToMessage(e) })
+        if (e instanceof ZodError) return badRequest({ message: zodErrorToMessage(e) })
 
         console.error('Oops 😬', e)
         if (e instanceof TypeError && e.message === `Cannot read properties of undefined (reading 'catch')`) throw new Error(handlerNotAsyncMessage)
@@ -155,6 +156,10 @@ function transformUsingClassTransformer<T extends object, V extends object>(
 
 function validationErrorsToMessage(errors: ValidationError[]) {
   return errors.map((e) => getConstraints(e).join(', ')).join('. ') + '.'
+}
+
+function zodErrorToMessage(error: ZodError) {
+  return error.errors.map((e) => `${e.path.join(' -> ')}: ${e.message}`).join(', ') + '.'
 }
 
 function getConstraints(error: ValidationError): string[] {
