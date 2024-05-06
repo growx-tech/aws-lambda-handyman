@@ -129,8 +129,8 @@ export function Handler(options: TransformValidateOptions = defaultHandlerOption
 }
 
 function transformValidateOrReject<T extends object, V extends object>(cls: ClassConstructor<T>, plain: V, options?: TransformValidateOptions): T {
-  if ('parse' in cls && typeof cls['parse'] === 'function') {
-    return transformUsingZod(cls as any, plain)
+  if ('parse' in cls && typeof (cls as unknown as ZodSchema<T>)['parse'] === 'function') {
+    return transformUsingZod(cls as unknown as ZodSchema<T>, plain)
   }
 
   return transformUsingClassTransformer(cls, plain, options)
