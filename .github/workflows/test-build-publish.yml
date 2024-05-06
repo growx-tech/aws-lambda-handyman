@@ -2,8 +2,7 @@ name: Test, Build and Publish
 
 on:
   pull_request:
-    branches:
-      - 'master'
+    branches: ['*']
   push:
     branches:
       - 'master'
@@ -22,7 +21,7 @@ jobs:
 
   build:
     needs: test
-    if: github.event.name == 'pull_request'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
