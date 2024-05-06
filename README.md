@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">AWS Lambda Handyman</h1>
   <p align="center">
-AWS Lambda TypeScript validation made easy 🏄 ...️and some other things
+    AWS Lambda TypeScript validation made easy 🏄 ...️and some other things
   </p>
 </p>
 
@@ -81,12 +81,43 @@ Next we need to enable these options in our `.tsconfig` file
 
 ## Basic Usage
 
+AWS Lambda Handyman accpest both [`class-validator`](https://www.npmjs.com/package/class-validator) classes as [`zod`](https://www.npmjs.com/package/zod) parsable classes.
+
+### class-validator
+
 ```typescript
 import 'reflect-metadata'
 
 class CustomBodyType {
   @IsEmail()
   email: string
+}
+
+class AccountDelete {
+  @Handler()
+  static async handle(@Body() { email }: CustomBodyType) {
+    await deleteAccount(email)
+    return ok()
+  }
+}
+```
+
+### Zod
+
+```typescript
+const CustomBodySchema = z.object({
+  email: z.string().email()
+})
+
+class CustomBodyType {
+  constructor(input: z.input<typeof CustomBodySchema>) {
+    Object.assign(this, CustomBodyType.parse(input))
+  }
+
+  // Requires a static parse method
+  static parse(input: unknown) {
+    return new CustomBody(input as z.input<typeof CustomBodySchema>)
+  }
 }
 
 class AccountDelete {

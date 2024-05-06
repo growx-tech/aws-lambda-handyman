@@ -1,8 +1,9 @@
-import 'reflect-metadata'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
-import { validateSync, ValidationError } from 'class-validator'
 import { ClassConstructor, plainToInstance } from 'class-transformer'
-import { badRequest, HttpError, internalServerError, response, TransformValidateOptions } from '.'
+import { ValidationError, validateSync } from 'class-validator'
+import 'reflect-metadata'
+import { ZodSchema } from 'zod'
+import { HttpError, TransformValidateOptions, badRequest, internalServerError, response } from '.'
 
 const eventMetadataKey = Symbol('Event')
 const contextMetadataKey = Symbol('Ctx')
@@ -15,7 +16,7 @@ const defaultHandlerOptions = { enableImplicitConversion: true, forbidUnknownVal
 
 export const defaultInternalServerErrorMessage = 'Oops, something went wrong 😬'
 export const bodyIsNotProperJSON = `The request's body is not proper JSON 🤔`
-export const handlerNotAsyncMessage = '⚠️ Methods, decorated with @Handler, need to be async / need to return a Promise ⚠️ '
+export const handlerNotAsyncMessage = '⚠️ Methods, decorated with @Handler, need to be async / need to return a Promise ⚠️'
 
 export function Event() {
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
@@ -128,6 +129,22 @@ export function Handler(options: TransformValidateOptions = defaultHandlerOption
 }
 
 function transformValidateOrReject<T extends object, V extends object>(cls: ClassConstructor<T>, plain: V, options?: TransformValidateOptions): T {
+  if ('parse' in cls && typeof cls['parse'] === 'function') {
+    return transformUsingZod(cls as any, plain)
+  }
+
+  return transformUsingClassTransformer(cls, plain, options)
+}
+
+function transformUsingZod<T extends object, V extends object>(schema: ZodSchema<T>, plain: V): T {
+  return schema.parse(plain)
+}
+
+function transformUsingClassTransformer<T extends object, V extends object>(
+  cls: ClassConstructor<T>,
+  plain: V,
+  options?: TransformValidateOptions
+): T {
   const instance = plainToInstance(cls, plain, options)
   const validationErrors = validateSync(instance, options)
 

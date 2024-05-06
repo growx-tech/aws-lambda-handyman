@@ -1,20 +1,6 @@
-import {
-  Body,
-  Ctx,
-  defaultInternalServerErrorMessage,
-  Event,
-  Handler,
-  handlerNotAsyncMessage,
-  Headers,
-  HttpError,
-  Paths,
-  Queries,
-  TransformBoolean,
-  TransformValidateOptions
-} from '../src'
-import 'reflect-metadata'
-import * as mockData from '../test/mock/httpEventContext.json'
 import { APIGatewayEventDefaultAuthorizerContext, APIGatewayProxyEventBase, Context } from 'aws-lambda'
+import * as ct from 'class-transformer'
+import { Type } from 'class-transformer'
 import {
   IsBoolean,
   IsEmail,
@@ -30,8 +16,23 @@ import {
   Length,
   ValidateNested
 } from 'class-validator'
-import * as ct from 'class-transformer'
-import { Type } from 'class-transformer'
+import 'reflect-metadata'
+import { z } from 'zod'
+import {
+  Body,
+  Ctx,
+  Event,
+  Handler,
+  Headers,
+  HttpError,
+  Paths,
+  Queries,
+  TransformBoolean,
+  TransformValidateOptions,
+  defaultInternalServerErrorMessage,
+  handlerNotAsyncMessage
+} from '../src'
+import * as mockData from '../test/mock/httpEventContext.json'
 
 const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithBrokenNestedBody, eventWithNoBody, eventWithNoQueries, emptyEvent } =
   mockData
@@ -247,6 +248,37 @@ test('Handler has Body param, and is called with expected payload', async () => 
   class BodyType {
     @IsEmail()
     email: string
+  }
+
+  class HandlerTest {
+    @Handler()
+    static async handle(@Body() body: BodyType) {
+      return arguments
+    }
+  }
+
+  //@ts-ignore
+  const calledWithArgs = await HandlerTest.handle(event, context)
+
+  expect(calledWithArgs.length).toEqual(1)
+
+  const [injectedBody] = calledWithArgs
+  expect(injectedBody.email).toEqual(JSON.parse(event.body).email)
+})
+
+test('Handler has Body parram, and is called with expected zod payload', async () => {
+  const BodySchema = z.object({
+    email: z.string().email()
+  })
+
+  class BodyType {
+    constructor(input: z.input<typeof BodySchema>) {
+      Object.assign(this, BodySchema.parse(input))
+    }
+
+    static parse(input: unknown) {
+      return new BodyType(input as z.input<typeof BodySchema>)
+    }
   }
 
   class HandlerTest {
