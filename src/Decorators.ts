@@ -159,7 +159,7 @@ function validationErrorsToMessage(errors: ValidationError[]) {
 }
 
 function zodErrorToMessage(error: ZodError) {
-  return error.errors.map((e) => `${e.path.join(' -> ')}: ${e.message}`).join(', ') + '.'
+  return error.issues.map((e) => `${e.path.join(' -> ')}: ${e.message}`).join(', ') + '.'
 }
 
 function getConstraints(error: ValidationError): string[] {
