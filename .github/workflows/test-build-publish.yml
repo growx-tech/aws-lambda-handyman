@@ -1,42 +1,45 @@
 name: Test, Build and Publish
 
 on:
-  pull_request:
-    branches: ['*']
   push:
+    branches:
+      - 'master'
+  pull_request:
     branches:
       - 'master'
 
 jobs:
-  test:
+  is-code-okay:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: 'Europe/Amsterdam'
+          timezoneMacos: 'Europe/Amsterdam'
+          timezoneWindows: 'Central European time' # Oh you windows...
+      - uses: actions/checkout@v2
+      - name: Use Node.js 24
+        uses: actions/setup-node@v2
         with:
           node-version: 24
-      - run: npm ci
-
-      - run: npm test
-
-  build:
-    needs: test
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Cache node modules
+        uses: actions/cache@v3
         with:
-          node-version: 24
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Authenticate registry
+        env:
+          GROWY_CLOUD_COMMON_TOKEN: ${{ secrets.GROWY_CLOUD_COMMON_TOKEN }}
+        run: npm config set //npm.pkg.github.com/:_authToken="$GROWY_CLOUD_COMMON_TOKEN"
       - run: npm ci
-
-      - run: npm run build:cjs
-      - run: npm run build:es2015
-      - run: npm run build:types
+      - run: npm run prettier:check
+      - run: npm run test
 
   tag-version:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push'
+    needs: is-code-okay
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -69,10 +72,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: npm ci
-      - run: npm run build:cjs
-      - run: npm run build:es2015
-      - run: npm run build:types
-
+      - run: npm run build:all
+      - name: update package.json
+        uses: jaywcjlove/github-action-package@main
+        with:
+          data: |
+            {
+              "main": "./lib/cjs/src/_index.js",
+              "types": "./lib/types/src/_index.d.ts",
+              "module": "./lib/es2015/src/_index.js",
+              "es2015": "./lib/es2015/src/_index.js"
+            }
       - name: Publish to GitHub Packages
         run: npm publish
         env:
