@@ -77,7 +77,7 @@ test('Handler method is not async', () => {
 
   expect(() => {
     HandlerToTest.handle()
-  }).toThrowError(handlerNotAsyncMessage)
+  }).toThrow(handlerNotAsyncMessage)
 })
 
 test('Handler no params test', async () => {
