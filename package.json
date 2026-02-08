@@ -2,23 +2,11 @@
   "name": "aws-lambda-handyman",
   "version": "0.6.0",
   "description": "AWS Lambda TypeScript validation made easy 🏄",
-  "main": "./lib/cjs/src/index.js",
-  "typings": "./lib/types/src/index.d.ts",
-  "module": "./lib/es2015/src/index.js",
-  "es2015": "./lib/es2015/src/index.js",
   "files": [
     "lib"
   ],
-  "authors": [
-    "Slaven Ivanov <ivanov@growy.nl>",
-    "Sander Boer <mail@sanderboer.nl>",
-    "Mariusz Chruscielewski <mariusz@growy.nl>"
-  ],
+  "author": "Growy",
   "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/growx-tech/aws-lambda-handyman.git"
-  },
   "scripts": {
     "build": "tsc",
     "build:all": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.es2015.json && tsc --project tsconfig.types.json",
@@ -34,7 +22,6 @@
     "ipp": "npm i && npm run pp",
     "dev:link": "npm link"
   },
-  "sideEffects": false,
   "dependencies": {
     "class-transformer": "0.5.1",
     "class-validator": "0.14.3",
@@ -52,16 +39,8 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-  "keywords": [
-    "aws",
-    "lambda",
-    "aws lambda",
-    "typescript",
-    "validate",
-    "validation",
-    "schema",
-    "aws lambda utility",
-    "http responses",
-    "error handling"
-  ]
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:growx-tech/aws-lambda-handyman.git"
+  }
 }
