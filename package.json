@@ -27,6 +27,7 @@
     "test": "jest && npm run badge >/dev/null 2>&1",
     "badge": "make-coverage-badge --output-path ./static/coverage-badge.svg ",
     "prettier": "prettier --write .",
+    "prettier:check": "prettier --check .",
     "pre-pr": "npm run prettier && npm run test",
     "pp": "npm run pre-pr",
     "ipp": "npm i && npm run pp",
