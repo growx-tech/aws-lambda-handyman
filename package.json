@@ -21,6 +21,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:all": "npm run build:cjs && npm run build:es2015 and npm run build:types",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:es2015": "tsc --project tsconfig.es2015.json",
     "build:types": "tsc --project tsconfig.types.json",
