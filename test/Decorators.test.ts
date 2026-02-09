@@ -18,21 +18,11 @@ import {
 } from 'class-validator'
 import 'reflect-metadata'
 import { z } from 'zod'
-import {
-  Body,
-  Ctx,
-  Event,
-  Handler,
-  Headers,
-  HttpError,
-  Paths,
-  Queries,
-  TransformBoolean,
-  TransformValidateOptions,
-  defaultInternalServerErrorMessage,
-  handlerNotAsyncMessage
-} from '../src'
+import { Body, Ctx, Event, Handler, Headers, Paths, Queries, defaultInternalServerErrorMessage, handlerNotAsyncMessage } from '../src/Decorators'
 import * as mockData from '../test/mock/httpEventContext.json'
+import { TransformValidateOptions } from '../src/types'
+import { HttpError } from '../src/HttpErrors'
+import { TransformBoolean } from '../src/TransformDecorators'
 
 const { event, context, eventWithNoPathParams, eventWithBrokenBody, eventWithBrokenNestedBody, eventWithNoBody, eventWithNoQueries, emptyEvent } =
   mockData

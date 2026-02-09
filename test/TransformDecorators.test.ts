@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer'
-import { TransformBoolean } from '../src'
+import { TransformBoolean } from '../src/TransformDecorators'
 
 test('@TransformBoolean()', async () => {
   class TransQuery {

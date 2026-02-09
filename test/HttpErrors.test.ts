@@ -1,4 +1,4 @@
-import { DYNAMO_ERROR_MESSAGE, DynamoError, HttpError } from '../src'
+import { DYNAMO_ERROR_MESSAGE, DynamoError, HttpError } from '../src/HttpErrors'
 
 const customErrorMessage = 'Tony Hawk just did a 50/50 on the DynamoDB server and it crashed :('
 

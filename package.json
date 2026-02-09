@@ -1,6 +1,6 @@
 {
   "name": "@growx-tech/aws-lambda-handyman",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "AWS Lambda TypeScript validation made easy 🏄",
   "files": [
     "lib"

@@ -3,7 +3,9 @@ import { ClassConstructor, plainToInstance } from 'class-transformer'
 import { validateSync, ValidationError } from 'class-validator'
 import 'reflect-metadata'
 import { ZodError, ZodSchema } from 'zod'
-import { badRequest, HttpError, internalServerError, response, TransformValidateOptions } from '.'
+import { HttpError } from './HttpErrors'
+import { badRequest, internalServerError, response } from './HttpResponses'
+import { TransformValidateOptions } from './types'
 
 const eventMetadataKey = Symbol('Event')
 const contextMetadataKey = Symbol('Ctx')
@@ -18,38 +20,56 @@ export const defaultInternalServerErrorMessage = 'Oops, something went wrong �
 export const bodyIsNotProperJSON = `The request's body is not proper JSON 🤔`
 export const handlerNotAsyncMessage = '⚠️ Methods, decorated with @Handler, need to be async / need to return a Promise ⚠️'
 
-export function Event() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+export function Event(): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    if (propertyKey === undefined) {
+      throw new Error('propertyKey cannot be undefined')
+    }
     Reflect.defineMetadata(eventMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
-export function Ctx() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+export function Ctx(): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    if (propertyKey === undefined) {
+      throw new Error('propertyKey cannot be undefined')
+    }
     Reflect.defineMetadata(contextMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
-export function Paths() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+export function Paths(): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    if (propertyKey === undefined) {
+      throw new Error('propertyKey cannot be undefined')
+    }
     Reflect.defineMetadata(pathsMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
-export function Body() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+export function Body(): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    if (propertyKey === undefined) {
+      throw new Error('propertyKey cannot be undefined')
+    }
     Reflect.defineMetadata(bodyMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
-export function Queries() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+export function Queries(): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    if (propertyKey === undefined) {
+      throw new Error('propertyKey cannot be undefined')
+    }
     Reflect.defineMetadata(queriesMetadataKey, parameterIndex, target, propertyKey)
   }
 }
 
-export function Headers() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+export function Headers(): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    if (propertyKey === undefined) {
+      throw new Error('propertyKey cannot be undefined')
+    }
     Reflect.defineMetadata(headersMetadataKey, parameterIndex, target, propertyKey)
   }
 }

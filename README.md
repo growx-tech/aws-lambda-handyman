@@ -45,12 +45,12 @@ export const handler = SpamBot.handle
       - [Validation and Injection](#validation-and-injection)
       - [Validation Caveats](#validation-caveats)
   - [Function Param Decorators](#function-param-decorators)
-    - [@Event()](#event)
+    - [@Message()](#message)
     - [@Ctx()](#ctx)
     - [@Paths()](#paths)
     - [@Body()](#body)
     - [@Queries()](#queries)
-    - [@Headers()](#headers)
+    - [@HttpHeaders()](#headers)
   - [Transformer Decorators](#transformer-decorators)
     - [@TransformBoolean()](#transformboolean)
 - [Http Errors](#httperrors)
@@ -151,7 +151,7 @@ class KitchenSink {
   @Handler()
   static async handle(
     @Body() body: BodyType,
-    @Event() evt: APIGatewayProxyEventBase<T>,
+    @Message() evt: APIGatewayProxyEventBase<T>,
     @Paths() paths: PathsType,
     @Ctx() ctx: Context,
     @Queries() queries: QueriesType
@@ -182,7 +182,7 @@ When applied, `@Handler()` enables the following:
 
 1. Validation and injection of method parameters, decorated with [@Paths()](#paths), [@Body()](#body)
    ,[@Queries()](#queries) parameters
-2. Injection of method parameters, decorated with [@Event()](#event) and [Ctx()](#ctx)
+2. Injection of method parameters, decorated with [@Message()](#event) and [Ctx()](#ctx)
 3. Out of the box error handling and custom error handling via throwing [HttpError](#httperror-)
 
 ### `@Handler(options?: TransformValidateOptions)`
@@ -394,14 +394,14 @@ You could also extend `HttpError` for commonly occurring error types like in [Dy
 
 ### Function Param Decorators
 
-### `@Event()`
+### `@Message()`
 
 Injects the `APIGatewayProxyEventBase<T>` object, passed on to the function at runtime.
 
 ```typescript
 class AccountDelete {
   @Handler()
-  static async handle(@Event() evt) {}
+  static async handle(@Message() evt) {}
 }
 ```
 
@@ -468,7 +468,7 @@ class IsBalloonInflated {
 }
 ```
 
-### `@Headers()`
+### `@HttpHeaders()`
 
 Validates the http event's headers and injects them into the decorated method parameter.
 
@@ -483,7 +483,7 @@ class HeadersType {
 
 class IsBalloonInflated {
   @Handler()
-  static async handle(@Headers() { authoriation }: HeadersType) {}
+  static async handle(@HttpHeaders() { authoriation }: HeadersType) {}
 }
 ```
 
